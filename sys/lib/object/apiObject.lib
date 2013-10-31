@@ -1,0 +1,50 @@
+<?php
+
+	class apiObject {
+
+		private $buffer;
+		private $tableName;
+
+		function __construct($tableName) {
+			$this->tableName 	= $tableName;
+		}
+
+		public function render() {
+			print_r($this->buffer);
+			return array(array($this));
+		}
+
+		public function get($type, $data = null) {
+			/*
+			if ($data) {
+				$data 		= new dataObject($this->tableName, $data[0]);
+			} else {
+				$data 		= new data($this->tableName);
+			}
+			*/
+		
+			$get 			= (isset($data[0])) ? "Record" : "List";
+			$record 		= (isset($data[0])) ? $data[0] : null;
+
+			$this->buffer = "GET $get $record";
+			return $this->buffer;
+		}
+
+		public function put($type, $data) {
+			$this->buffer =  "PUT";
+			return $this;
+		}
+
+		public function post($type, $data) {
+			$this->buffer =  "POST";
+			return $this;
+		}
+
+		public function delete($type, $data) {
+			$this->buffer =  "DELETE";
+			return $this;
+		}
+
+	}
+
+?>
