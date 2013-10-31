@@ -1,0 +1,77 @@
+<?php
+
+	class htmlOutputHandler {
+
+		function __construct() {
+		}
+
+		public function handleHtmlOutput($id = 0, $data = null, $error = false, $eventName = null) {
+			
+			if (is_object($data)) {
+
+				if (method_exists($data, 'render')) {
+					$data->render($data);
+				} elseif (method_exists($data, '__toString')) {
+					print $this->returnElement("$data", $id, $error);
+				} else {
+					print $this->returnElement($data, $id, $error);
+				}
+
+			} elseif (is_array($data)) {
+
+				if ($this->arrayDepth($data) == 1) {
+
+					if ($this->isAssoc($data)) {
+
+					} else {
+
+					}
+
+				} elseif ($this->arrayDepth($data) >= 2) {
+
+					if ($this->isAssoc($data)) {
+
+					} else {
+						
+					}
+
+				} else {
+					print $this->returnElement($data, $id, $error);
+				}
+
+			} else {
+				print $this->returnElement($data, $id, $error);
+			}
+
+		}
+
+		private function returnElement($input, $id, $error = false) {
+			return ($error) 
+				? "<strong id=\"$id\" class=\"error\" style=\"color:#a81010;\">Error: $input</strong>"
+				: "<span id=\"$id\" class=\"response\">$input</span>"
+			;
+		}
+
+		private function arrayDepth(array $array) {
+		    $max_depth = 1;
+
+		    foreach ($array as $value) {
+		        if (is_array($value)) {
+		            $depth = $this->arrayDepth($value) + 1;
+
+		            if ($depth > $max_depth) {
+		                $max_depth = $depth;
+		            }
+		        }
+		    }
+
+		    return $max_depth;
+		}
+
+		private function isAssoc($arr) {
+		    return array_keys($arr) !== range(0, count($arr) - 1);
+		}
+
+	}
+
+?>
