@@ -1,0 +1,2 @@
+RewriteEngine On
+RewriteRule ^request(.*)$ sys/lib/api/rest.php?rest=$1 [L]
