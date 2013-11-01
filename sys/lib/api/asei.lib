@@ -13,38 +13,18 @@
 	 * so working configurations are currently limited to Firefox, Chromium,
 	 * Opera, Safari and any other web standards compliant browser.	
 	 *
-	 *@todo Security and Public Events where events should evaluate that the
-	 *requests come from this host unless otherwise specified. It may be neat
-	 *to have someone else listing for your events.
-	 *
-	 *@todo Plugins and Functional code. Some initial start up code to load
-	 *server libraries/framework, and then some plugin style dynamic object
-	 *manager
-	 *
-	 *@todo .htaccess security redirects and restrictions
 	 *
 	 *
 	 *@author Geoffrey L. Kuhl
 	 *@package asei
 	 *@subpackage server-side
-	 *@version 0.1.5
+	 *@version 0.2.6
  	 */
-	
-
-	/**
-	 * ASEI
-	 * Global Instance
-	 * 
-	 * @var asei
-	 */
-	//global $asei;
-	//$asei 		= new asei();
 
 
 
 	/**
-	 * Functional Wrappers
-	 * wraps Object with functional methods
+	 Functional Wrappers
 	 */
 	
 
@@ -75,6 +55,8 @@
 		return $asei->registerHandler($eventName, $object, $method);
 	}
 
+
+
 	/**
 	 * Raise Event
 	 *
@@ -96,6 +78,18 @@
 	}
 
 
+
+	/**
+	 * Register Object
+	 * Only instansiated class objects can be registerd with the ASEI
+	 * to be called against for security reasons. This keep ASEI from
+	 * being able to call any class method, and only call ones the
+	 * server-side code says is okay.
+	 * 
+	 * @param  string 	$objectName Name of object to be registered
+	 * @param  object	$object     Object to catalog
+	 * @return           
+	 */
 	function registerObject($objectName, &$object) {
 		global $asei;
 		return $asei->registerObject($objectName, $object);
@@ -104,16 +98,16 @@
 
 
 	/**
+	 ASEI Class
+	 */
+	
+
+
+	/**
 	 * ASEI
 	 * Class asei
 	 */
 	class asei {
-
-
-		/**
-		 * ASEI Version
-		 */
-		const version 				= "0.1.5";
 
 
 		/**
@@ -142,8 +136,30 @@
 		 */
 		protected $serverHandlers	= array();
 
+
+		/**
+		 * Response/Request Type
+		 * JSON, XML, HTML, STREAM
+		 * @var string
+		 */
 		protected $type 			= null;
+
+
+		/**
+		 * Is a valid request? Has all the
+		 * variables required to process
+		 * @var boolean
+		 */
 		protected $validRequest		= false;
+
+
+		/**
+		 * Data injected by an external source
+		 * at the time of instansiation aswhen
+		 * an AJAX request is made from the
+		 * client.
+		 * @var array
+		 */
 		protected $pushData			= array();
 
 
@@ -154,12 +170,22 @@
 		private $logs				= array();
 
 
+		/**
+		 * Private storage for allowable objects
+		 * that can be called when events are raised
+		 * or from the api
+		 * @var array
+		 */
 		private $objects			= array();
 
 
 
 		/**
 		 * Construct
+		 * @param array [$pushData] Data injected by an external source
+		 *                          at the time of instansiation aswhen
+		 *                          an AJAX request is made from the
+		 *                          client.
 		 */
 		function __construct(array $pushData = array()) {
 
@@ -222,18 +248,6 @@
 
 
 		/**
-		 * @todo
-		 * @return boolean
-		 */
-		private function hasDirectContact() {
-			$req 	= (substr(__FILE__, -strlen($_SERVER['REQUEST_URI'])));
-			$uri 	= $_SERVER['REQUEST_URI'];
-			return ($req == $uri);;
-		}
-
-
-
-		/**
 		 * Start-up Event Data
 		 * @return array Returns ASEI information
 		 */
@@ -249,9 +263,20 @@
 		}
 
 
-
+		/**
+		 * Register Object
+		 * Only instansiated class objects can be registerd with the ASEI
+		 * to be called against for security reasons. This keep ASEI from
+		 * being able to call any class method, and only call ones the
+		 * server-side code says is okay.
+		 * 
+		 * @param  string 	$objectName Name of object to be registered
+		 * @param  object	$object     Object to catalog
+		 * @return object Set by input
+		 */
 		public function registerObject($name, &$object) {
 			$this->objects[$name] = &$object;
+			return $this->objects[$name];
 		}
 
 
@@ -289,7 +314,6 @@
 				$status			= false;
 				return $e->getMessage();
 			}
-
 		}
 
 
@@ -355,7 +379,17 @@
 		}
 
 
-
+		/** 
+		 * Send
+		 *
+		 * Output router for server-to-client repsonses
+		 * which calls a private method to handle any
+		 * given type supported by ASEI.
+		 * 
+		 * @param  mixed 	$data 	Output Data, Object, String, Error
+		 * @param  boolean 	$error 	True if throwing and error
+		 * @return void
+		 */
 		private function send($data, $error = false) {
 
 			switch (strtolower($this->type)) {
@@ -381,9 +415,14 @@
 		}
 
 
+
 		/**
 		 * Send XML
-		 * Prints XML encoded data for output or for error
+		 * 
+		 * Sends XML encoded data for output or for error for use
+		 * with XML-RPC when client requests are made
+		 * including GET, PUT, POST, DELETE RPC commands.
+		 * 
 		 * @param  array  	$data  Output Data, Object, String, Error
 		 * @param  boolean	$error True if throwing and error
 		 * @return void
@@ -410,9 +449,14 @@
 		}
 
 
+
 		/**
 		 * Send JSON
-		 * Prints JSON encoded data for output or for error
+		 * 
+		 * Sends JSON encoded data for output or for error for use
+		 * with AJAX when client requests are made
+		 * including GET, PUT, POST, DELETE ajax commands.
+		 * 
 		 * @param  array 	$data 	Output Data, Object, String, Error
 		 * @param  boolean 	$error 	True if throwing and error
 		 * @return void
@@ -436,6 +480,10 @@
 
 		/**
 		 * Send HTML
+		 *
+		 * Sends text/html formatted response to the client for
+		 * GET, POST, PUT, and DELTE commands made from the UX
+		 * 
 		 * @param  array 	$data 	Output Data, Object, String, Error
 		 * @param  boolean 	$error 	True if throwing and error
 		 * @return void
@@ -450,6 +498,14 @@
 
 		/**
 		 * Send Stream
+		 *
+		 * Sends stream, message transport formated response
+		 * to the client for EventSource connections made
+		 * by the client.
+		 *
+		 * @param mixed 	$data 	Data to send to the client
+		 * @param boolean	$error 	Set to True if is error
+		 * @return void
 		 */
 		private function sendStream($data, $error = false) {
 			$id 	= uniqid();
@@ -582,8 +638,8 @@
 		/**
 		 * Raise Event
 		 *
-		 * Raises an event which calls all listening/registered handlers 
-		 * and passes incoming event data to the handler.
+		 * Raises a server-side event which calls all listening/registered 
+		 * handlers and passes incoming event data to the handler.
 		 *
 		 * <code>
 		 * 	raiseEvent('some_event_name', array('mydata'=>'this'));
@@ -596,8 +652,6 @@
 		 */
 		public function raiseEvent($eventName, array $data = array(), $retry = 10000) {
 			$serverCalls	= $this->callHandler($eventName, $data);
-			//$clientCalls	= $this->pushEvent($eventName, $data, $retry);
-			//return array('server'=>$serverCalls, 'client'=>$clientCalls);
 			return $serverCalls;
 		}
 
