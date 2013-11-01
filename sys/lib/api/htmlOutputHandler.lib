@@ -21,19 +21,11 @@
 
 				if ($this->arrayDepth($data) == 1) {
 
-					if ($this->isAssoc($data)) {
-
-					} else {
-
-					}
+					print $this->buildList($data, $this->isAssoc($data));
 
 				} elseif ($this->arrayDepth($data) >= 2) {
 
-					if ($this->isAssoc($data)) {
-
-					} else {
-						
-					}
+					print $this->buildTable($data, $this->isAssoc($data));
 
 				} else {
 					print $this->returnElement($data, $id, $error);
@@ -70,6 +62,66 @@
 
 		private function isAssoc($arr) {
 		    return array_keys($arr) !== range(0, count($arr) - 1);
+		}
+
+
+
+		private function buildList(array $list, $withKeys = false) {
+			
+			$html 	= ($withKeys) ? "<dl class=\"dl-horizontal\">" : "<ul>";
+
+			foreach ($list as $key => $value) {
+
+				$line 	= ($withKeys)
+					? "<dt>$key</dt><dd>$value</dd>"
+					: "<li>$value</li>"
+				;
+
+				$html .= $line;
+			}
+
+			$html .= ($withKeys) ? "</dl>" : "</ul>";
+			return $html;
+		}
+
+
+		/**
+		 *
+		 * array(0=>array(0=>'a',1=>'b'), 1=>array(), 2=>array())
+		 * array(0=>array('a'=>1,'b'=>2), 1=>array(), 2=>array())
+		 * 
+		 * array('key'=>array(0=>'a',1=>'b'),'key'=>array(),'key'=>array())
+		 * array('key'=>array('a'=>1,'b'=>2),'key'=>array(),'key'=>array())
+		 * 
+		 * @param  array   $data      [description]
+		 * @param  boolean $withTypes [description]
+		 * @return [type]             [description]
+		 */
+		private function buildTable(array $data, $assc = false) {
+
+			if ($assc) {
+				$html = "something great";
+			} else {
+
+				$firstRow 	= $data[0];
+				unset($data[0]);
+
+				$html = "<table class=\"table\">";
+				$html.= "<thead><tr><th>".implode("</th><th>", $firstRow)."</th></tr></thead>";
+				$html.= "<tbody>";
+
+				foreach ($data as $index => $row) {
+
+					$html.="<tr><td>".implode("</td><td>", $row)."</td></tr>";
+
+				}
+
+				$html.="</tbody>";
+				$html.="</table>";
+
+			}
+
+			return $html;
 		}
 
 	}

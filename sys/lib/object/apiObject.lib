@@ -26,7 +26,28 @@
 			$get 			= (isset($data[0])) ? "Record" : "List";
 			$record 		= (isset($data[0])) ? $data[0] : null;
 
-			$this->buffer = "GET $get $record";
+
+			//record
+			$this->buffer = array(
+				'id'	=> $record,
+				'name'	=> 'bob',
+				'email'	=> 'bob@bob.com'
+			);
+
+			//record or list
+			$this->buffer = array(
+				array('id', 'name', 'email'),
+				array($record, 'bob', 'bob@bob.com'),
+				array($record2, 'bob2', 'bob2@bob2.com')
+			);
+
+			//list
+			$this->buffer = array(
+				'id'=>array(1,2,3),
+				'name'=>array('a','bob','c'),
+				'email'=>array('email', 'email2', 'email3')
+			);
+
 			return $this->buffer;
 		}
 
