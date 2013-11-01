@@ -9,7 +9,10 @@
 
 
 
-	// ---------- Functional Methods ---------- //
+	/**
+	 Functional Methods
+	 */
+
 
 
 
@@ -51,18 +54,9 @@
 		$keys			= array_keys($data);
 		$firstKey		= (isset($keys[0])) ? $keys[0] : null;
 		$lastKey		= $keys[count($keys)-1];
-
-		//$secKey			= (isset($keys[1])) ? $keys[1] : null;
 		$class 			= (isset($data[$firstKey]))	? $data[$firstKey] 	: null;
 		$type 			= (isset($data[$lastKey]))	? $data[$lastKey] 	: null;
-		//$method			= (isset($data[$secKey]))	? $data[$secKey]	: null;
-		//$methodParts	= explode('.', $method, 2);
-		//$method 		= $methodParts[0];
-		//$type 			= (isset($methodParts[1]))	? $methodParts[1]	: null;
-		//$parts 			= explode('.', $type, 2);
-		//$type 			= $parts[count($parts)-1];
-		//$data[$lastKey]	= $parts[0];
-
+		
 		if ($class) 					unset($data[$firstKey]);
 		if (isset($data[$lastKey])) 	unset($data[$lastKey]);
 	
@@ -73,7 +67,27 @@
 		$method 		= $reqMethod;
 		$valid			= ($class and $method and $type);
 
-		/** Get POST/PUT/DELETE **/
+
+		/** Get GET/POST/PUT/DELETE **/
+		switch ($reqMethod) {
+
+			case 'post':
+				$param 			= array_merge($_POST, $param);
+			break;
+
+			case 'delete':
+			case 'put':
+				$buffer 		= array();
+				parse_str(file_get_contents('php://input'), $buffer);
+				$param 			= array_merge($buffer, $param);
+			break;
+
+			default:
+			case 'get':
+			break;
+
+		}
+
 		if ($reqMethod == 'post') {
 			$param 			= array_merge($_POST, $param);
 		}
@@ -87,7 +101,6 @@
 			'request_type'	=> $reqMethod
 		);
 
-		//print_r($struct);
 		return $struct;
 	}
 

@@ -263,6 +263,7 @@
 		}
 
 
+
 		/**
 		 * Register Object
 		 * Only instansiated class objects can be registerd with the ASEI
@@ -377,6 +378,7 @@
 
 			return true;
 		}
+
 
 
 		/** 
