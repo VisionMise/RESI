@@ -1,7 +1,7 @@
 <?php
 
 	/** Boot **/
-	if (!require('../../boot/init.bin')) {
+	if (!require('../../boot/init.php')) {
 		throw new Exception('Could not initialize');
 		exit();
 	}
