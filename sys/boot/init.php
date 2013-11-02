@@ -1,5 +1,10 @@
 <?php
 
+	global $config;
+	global $asei;
+
+
+
 	/**
 	 * Boot
 	 */
@@ -12,7 +17,6 @@
 	 * Load resi configuration
 	 * then check that it was loaded
 	 */
-	global $config;
 	$config 	= loadConfig();
 
 
@@ -23,7 +27,10 @@
 	loadLibraries();
 
 
-    /** Rest Data **/
+
+    /** 
+     * Rest Data
+     */
     $restData 		= loadRestData();
     $group			= 'member';
     $class 			= $restData['class'];
@@ -36,15 +43,65 @@
     }
 
 
+
+    /** 
+     * Load Event Handlers
+     */
 	loadEventHandlers($restData);
 
 
+
+	/**
+	 * If request is permitted, connect to database
+	 * and register api request class objects
+	 */
 	if (!$denied) {
-		/** Connect to database **/
+		connectToDatabase();
+		registerObjects();
+	}
+
+
+
+	/**
+	 * Register API objects
+	 */
+	registerObjects();
+
+
+
+	/**
+	 * Create Global Server Event Handler
+	 */
+	$asei->processRequest($denied);
+
+
+
+
+
+
+
+
+
+
+
+
+	/**
+	 Functional Methods
+	 */
+
+
+
+	/**
+	 * Connect to Database
+	 * @return boolean True if connected, False if not or error.
+	 */
+	function connectToDatabase() {
 	    global $sqlConnection;
 	    global $sqlConnected;
+	    global $config;
 	    
 	    $cfgDatabase    = $config['mysql'];
+	    if ($cfgDatabase['connect'] != true) return false;
 /*
 	    $sqlConnection  = new mysqli(
 	        $cfgDatabase['host'],
@@ -55,24 +112,18 @@
 	    );
 	    
 	    $sqlConnected   = ($sqlConnection->errno == 0);
-	   */
+*/
+	    return $sqlConnected;
 	}
 
 
+
 	/**
-	 * Register API objects
+	 * Register Objects
+	 * Registers all self registering objects at startup
+	 * which are declared in [objects] section of the resi.conf
+	 * @return void
 	 */
-	registerObjects();
-
-
-	global $asei;
-	$asei->processRequest($denied);
-
-
-	// ---------- Functional Methods ---------- //
-
-
-
 	function registerObjects() {
 		global $config;
 
@@ -84,6 +135,7 @@
 			registerObject($name, $object);
 		}
 	}
+
 
 
 	/**
