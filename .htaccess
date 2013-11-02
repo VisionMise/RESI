@@ -1,2 +1,3 @@
 RewriteEngine On
 RewriteRule ^request(.*)$ sys/lib/api/rest.php?rest=$1 [L]
+RewriteRule ^page(.*)$ sys/lib/object/page.php?page=$1 [L]
