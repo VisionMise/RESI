@@ -100,9 +100,10 @@
 	    global $sqlConnected;
 	    global $config;
 	    
-	    $cfgDatabase    = $config['mysql'];
+	    $cfgDatabase    = $config['mysql'];	    
 	    if ($cfgDatabase['connect'] != true) return false;
-/*
+
+
 	    $sqlConnection  = new mysqli(
 	        $cfgDatabase['host'],
 	        $cfgDatabase['user'],
@@ -112,7 +113,7 @@
 	    );
 	    
 	    $sqlConnected   = ($sqlConnection->errno == 0);
-*/
+
 	    return $sqlConnected;
 	}
 
@@ -194,7 +195,7 @@
 	function setWorkingFolder() {
 		global $workingFolder;
 		$workingFolder = realpath('../../');
-		define("root", $workingFolder);
+		define("ROOT", $workingFolder);
 	}
 
 
@@ -204,7 +205,7 @@
 	 * @return array resi configuration array
 	 */
 	function loadConfig() {
-		$configPath			= realpath(root."/cfg/resi.conf");
+		$configPath			= realpath(ROOT."/cfg/resi.conf");
 		if (!$configPath)	return false;
 
 		$config 			= parse_ini_file($configPath, true);

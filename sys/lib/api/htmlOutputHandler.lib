@@ -6,9 +6,7 @@
 		}
 
 		public function handleHtmlOutput($id = 0, $data = null, $error = false, $eventName = null) {
-			
 			if (is_object($data)) {
-
 				if (method_exists($data, 'render')) {
 					$data->render($data);
 				} elseif (method_exists($data, '__toString')) {
@@ -16,25 +14,17 @@
 				} else {
 					print $this->returnElement($data, $id, $error);
 				}
-
 			} elseif (is_array($data)) {
-
 				if ($this->arrayDepth($data) == 1) {
-
 					print $this->buildList($data, $this->isAssoc($data));
-
 				} elseif ($this->arrayDepth($data) >= 2) {
-
 					print $this->buildTable($data, $this->isAssoc($data));
-
 				} else {
 					print $this->returnElement($data, $id, $error);
 				}
-
 			} else {
 				print $this->returnElement($data, $id, $error);
 			}
-
 		}
 
 		private function returnElement($input, $id, $error = false) {
@@ -100,7 +90,9 @@
 		private function buildTable(array $data, $assc = false) {
 
 			if ($assc) {
-				$html = "something great";
+				$html 	= "<table class=\"table\">";
+				
+
 			} else {
 
 				$firstRow 	= $data[0];
