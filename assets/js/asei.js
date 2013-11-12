@@ -157,7 +157,7 @@ function asei(source) {
 	 * @param  Function callback
 	 * @return Object 	Self
 	 */
-	this.requestFrom	= function(data, callback) {
+	this.update	= function(data, callback) {
 
 		/** jQuery POST Request **/
 		$.post(this.source, data, function(data) {
@@ -170,13 +170,16 @@ function asei(source) {
 
 
 
-	this.put			= function(data, callback) {
+	this.create			= function(data, callback) {
 		/** jQuery ajax Request **/
 		$.ajax({
 			url: this.source,
 			type: 'PUT',
 			data: data,
-			success: callback
+			success: function(data) {
+				var parsed = JSON.parse(data);
+				callback(parsed);
+			}
 		});
 
 		/* Return Self */

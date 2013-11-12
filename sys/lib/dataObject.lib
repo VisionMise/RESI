@@ -9,8 +9,6 @@
 		protected $children			= array();
 		protected $cache			= array();
 
-		public $loadedRecord		= false;
-
 		public function __construct($table, $id, $idField = null, array $enumerate = array()) {
 			parent::__construct($table, $idField);
 

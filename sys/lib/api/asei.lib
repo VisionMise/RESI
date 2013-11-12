@@ -309,7 +309,13 @@
 
 			try {
 				$result = call_user_func_array(array($object, $methodName), $arguments);
-				$status = true;
+				$status = ($result !== false);
+
+				if (substr($result, 0, 3) == 'e0:') {
+					$status 	= false;
+					$result 	= substr($result, 3);
+				}
+
 				return $result;
 			} catch (Exception $e) {
 				$status			= false;
@@ -374,7 +380,7 @@
 
 			$status     = true;
 			$result		= $this->methodCall($objName, $funcName, $funcParam, $status);
-			$this->send($result, ($status === false));
+			$this->send($result, ($status == false));
 
 			return true;
 		}
@@ -432,7 +438,7 @@
 		private function sendXML($data, $error = false) {
 			/** Create Standard Return Struction **/
 			$return 	= array(
-				'id'		=> uniqid(),
+				'event_id'	=> uniqid(),
 				'result'	=> ($error) ? null : $data,
 				'request'	=> $this->postedRequest,
 				'timestamp'	=> date(self::dateTime_format),
@@ -440,14 +446,28 @@
 			);
 
 			/** Reverse Keys and Values for XML **/
-			$keys 	= array_keys($return);
-			$vals 	= array_values($return);
-			$mrg 	= array_combine($vals, $keys);
+			$mrg = array();
+			$this->reverseKVA($data, $mrg);
 
 			$xml = new SimpleXMLElement('<resi/>');
 			array_walk_recursive($mrg, array($xml, 'addChild'));
 			print $xml->asXML();
 			if ($error == true) exit();
+		}
+
+		private function reverseKVA(array $data, array &$output) {
+			foreach ($data as $key => $value) {
+				if (is_array($value)) {
+					$output['list_'.$key] = array();
+					$this->reverseKVA($value, $output['list_'.$key]);
+				} else {
+					if (is_numeric($value)) {
+						$output['item_'.$value]	= $key;
+					} else {
+						$output[$value]	= $key;
+					}
+				}
+			}
 		}
 
 
@@ -467,7 +487,7 @@
 
 			/** Create Standard Return Struction **/
 			$return 	= array(
-				'id'		=> uniqid(),
+				'event_id'	=> uniqid(),
 				'result'	=> ($error) ? null : $data,
 				'request'	=> $this->postedRequest,
 				'timestamp'	=> date(self::dateTime_format),
@@ -514,7 +534,7 @@
 
 			/** Create Standard Return Struction **/
 			$return 	= array(
-				'id'		=> $id,
+				'event_id'	=> $id,
 				'result'	=> ($error) ? null : $data,
 				'request'	=> $this->postedRequest,
 				'timestamp'	=> date(self::dateTime_format),

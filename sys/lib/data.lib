@@ -8,6 +8,8 @@
 
         private $idField            = null;
         private $buffer             = null;
+
+        public $loadedRecord        = false;
         
         function __construct($tableName, $idField = null) {
             $this->tableName    = $tableName;
@@ -18,8 +20,19 @@
             return $this->record($id);
         }
         
-        function __invoke($sql) {
-            return $this->query($sql);
+        function __invoke($request) {
+
+            if (is_array($request)) {
+                return $this->records($request);
+            } elseif ($request) {
+                return $this->query($request);
+            }
+
+            return false;
+        }
+
+        function __toString() {
+            return $this->tableName;
         }
         
         function record($id) {
@@ -57,7 +70,7 @@
             return true;
         }
         
-        protected function insert(array $data) {
+        public function insert(array $data) {
             global $sqlConnection;
             
             $table      = $this->tableName;
@@ -69,22 +82,26 @@
             $sql        = "INSERT INTO `$table` ($strKey) VALUES ($strVal);";
 
             $this->buffer           = $sql;
+            $err                    = false;
             $result                 = $sqlConnection->query($sql);
             
             if ($sqlConnection->errno) {
                 $this->errors[]     = $sqlConnection->error;
-                return false;
+                $result             = "e0:".$sqlConnection->error;
+                $err                = true;
             } else {
                 $this->log[]        = "Inserted Record";
             }
 
-            return ($sqlConnection->insert_id) ? $sqlConnection->insert_id : $result;
+            return ($sqlConnection->insert_id and !$err) ? $sqlConnection->insert_id : $result;
         }
         
         protected function delete() {
+            
         }
         
         protected function replace() {
+
         }
         
         protected function selectById($id) {
@@ -109,11 +126,18 @@
             } 
 
             while ($row = $result->fetch_assoc()) {
-                $records[]  = $row;
+                $rid        = (!isset($row['id'])) ? $row['id'] : null;
+
+                if ($rid) {
+                    $records[$rid]  = $row;
+                } else {
+                    $records[]      = $row;
+                }
             }
             
             $count              = count($records);
             $this->log[]        = "Selected $count Records";
+            if ($records)       $this->loadedRecord = true;
 
             return $records;
         }
@@ -133,11 +157,18 @@
             }
 
             while ($row = $result->fetch_assoc()) {
-                $records[]  = $row;
+                $rid        = (!isset($row['id'])) ? $row['id'] : null;
+                
+                if ($rid) {
+                    $records[$rid]  = $row;
+                } else {
+                    $records[]      = $row;
+                }
             }
 
             $count              = count($records);
             $this->log[]        = "Selected $count Records";
+            if ($records)       $this->loadedRecord = true;
             
             return $records;
         }
@@ -156,13 +187,20 @@
             if (!$ignoreResults) {
 
                 while ($row = $result->fetch_assoc()) {
-                    $return[]  = $row;
+                    $rid        = (!isset($row['id'])) ? $row['id'] : null;
+                    
+                    if ($rid) {
+                        $records[$rid]  = $row;
+                    } else {
+                        $records[]      = $row;
+                    }
                 }
 
-                $count              = count($return);
+                $count              = count($records);
                 $this->log[]        = "Selected $count Records";
+                if ($records)       $this->loadedRecord = true;
 
-                return $return;
+                return $records;
             }
 
             return true;

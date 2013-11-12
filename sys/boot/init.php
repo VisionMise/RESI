@@ -35,12 +35,24 @@
     $group			= 'member';
     $class 			= $restData['class'];
 
+
+
+    /** Permissions **/
+    global $restrictions;
     if (isset($config[$group][$class])) {
     	$method 	= strtoupper($restData['method']);
+    	$view 		= $config[$group][$class]['view'];
     	$denied 	= ($config[$group][$class][$method] == false);
     } else {
     	$denied 	= false;
+    	$view 		= self;
     }
+
+    $restrictions	= array(
+    	'view'		=> 'self',
+    	'access'	=> $denied,
+    	'group'		=> $group
+    );
 
 
 
@@ -56,7 +68,12 @@
 	 * and register api request class objects
 	 */
 	if (!$denied) {
-		connectToDatabase();
+		
+		if (!connectToDatabase()) {
+			throw new Exception("Could not Connect to database");
+			exit();
+		}
+
 		registerObjects();
 	}
 
