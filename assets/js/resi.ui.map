@@ -1,0 +1,44 @@
+
+/**
+ * Sign In/Out Button
+ */
+function portalHooks() {
+	$('#submit_signin').click(function(e) {
+		var portal = new asei('request/portal/json');
+
+		portal.update(
+			$('#form_signin').serialize(),
+
+			function(data) {
+				if (data.error) {
+					$('#msg_signin').html(
+						'Something is not right here friend. Have you signed up?'
+					);
+				} else {
+					showWelcome(data.result);
+				}
+			}
+		);
+	});
+
+	$('#submit_signout').click(function(e) {
+		
+	});
+}
+
+function showWelcome(user) {
+	$('#username_welcome').html("Welcome "+user.username);
+	$('#box_signin, #icon_signup').hide(500);
+	$('#box_welcome').show(500);
+
+	$('.username_text').html(user.username);
+	$('.ip_text').html(user.last_ip);
+
+	setTimeout(loadMemberPage, 1000);
+}
+
+function loadMemberPage() {
+	resiUI.page('members/home/', 'template');
+	$('#box_welcome').fadeOut(1500);
+    $('body').css("background-image", "url('assets/images/member.jpg')");
+}

@@ -157,7 +157,7 @@ function asei(source) {
 	 * @param  Function callback
 	 * @return Object 	Self
 	 */
-	this.requestFrom	= function(data, callback) {
+	this.update	= function(data, callback) {
 
 		/** jQuery POST Request **/
 		$.post(this.source, data, function(data) {
@@ -170,18 +170,62 @@ function asei(source) {
 
 
 
-	this.put			= function(data, callback) {
+	this.create			= function(data, callback) {
 		/** jQuery ajax Request **/
 		$.ajax({
 			url: this.source,
 			type: 'PUT',
 			data: data,
-			success: callback
+			success: function(data) {
+				var parsed = JSON.parse(data);
+				callback(parsed);
+			}
 		});
 
 		/* Return Self */
 		return this;	
 	}
+
+
+
+	this.get			= function(data, callback) {
+		/** jQuery ajax Request **/
+		$.ajax({
+			url: this.source,
+			type: 'GET',
+			data: data,
+			success: function(data) {
+				callback(data);
+			}
+		});
+
+		/* Return Self */
+		return this;	
+	}
+
+
+	this.page 			= function(page, element) {
+		/** jQuery ajax Request **/
+		$.ajax({
+			url: page + '/',
+			type: 'GET',
+			data: {},
+			success: function(data) {
+				$(element)
+					.fadeOut(500, function() {
+						$(this)
+							.html(data)
+							.fadeIn(500)
+						;
+					});
+				;
+			}
+		});
+
+		/* Return Self */
+		return this;
+	}
+
 
 	this.delete			= function(data, callback) {
 		/** jQuery ajax Request **/
