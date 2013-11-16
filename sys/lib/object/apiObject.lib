@@ -3,7 +3,7 @@
 	class apiObject {
 
 		private $buffer;
-		private $tableName;
+		protected $tableName;
 
 		function __construct($tableName) {
 			$this->tableName 	= $tableName;

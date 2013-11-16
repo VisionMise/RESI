@@ -186,6 +186,47 @@ function asei(source) {
 		return this;	
 	}
 
+
+
+	this.get			= function(data, callback) {
+		/** jQuery ajax Request **/
+		$.ajax({
+			url: this.source,
+			type: 'GET',
+			data: data,
+			success: function(data) {
+				callback(data);
+			}
+		});
+
+		/* Return Self */
+		return this;	
+	}
+
+
+	this.page 			= function(page, element) {
+		/** jQuery ajax Request **/
+		$.ajax({
+			url: page + '/',
+			type: 'GET',
+			data: {},
+			success: function(data) {
+				$(element)
+					.fadeOut(500, function() {
+						$(this)
+							.html(data)
+							.fadeIn(500)
+						;
+					});
+				;
+			}
+		});
+
+		/* Return Self */
+		return this;
+	}
+
+
 	this.delete			= function(data, callback) {
 		/** jQuery ajax Request **/
 		$.ajax({

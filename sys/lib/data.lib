@@ -7,7 +7,7 @@
         protected $errors           = array();
 
         private $idField            = null;
-        private $buffer             = null;
+        public $buffer             = null;
 
         public $loadedRecord        = false;
         
