@@ -141,7 +141,10 @@ function asei(source) {
 		/**
 		 * Add Callback Event Listener
 		 */
-		this.connection.addEventListener(eventName, callback, false);
+		this.connection.addEventListener(eventName, function(event) {
+			var json = JSON.parse(event.data);
+			callback(json.result);
+		}, false);
 
 		/* Return Self */
 		return this;
