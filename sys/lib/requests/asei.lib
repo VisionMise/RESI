@@ -222,7 +222,7 @@
 			
 
 			if (!$handled and $stream) {
-				$this->pushEvent('aseiPoll', $this->pollEventData(), self::refreshMainPoll);
+				// $this->pushEvent('aseiPoll', $this->pollEventData(), self::refreshMainPoll);
 			} else {
 				exit();
 			}
@@ -311,7 +311,7 @@
 				$result = call_user_func_array(array($object, $methodName), $arguments);
 				$status = ($result !== false);
 
-				if (substr($result, 0, 3) == 'e0:') {
+				if (!is_array($result) and (substr($result, 0, 3) == 'e0:')) {
 					$status 	= false;
 					$result 	= substr($result, 3);
 				}
@@ -543,6 +543,7 @@
 
 			$this->pushEvent('response', $return);
 			if ($error == true) exit();
+			//return $return;
 		}
 
 
@@ -610,8 +611,8 @@
 			$strPackage    .= "data: $data".PHP_EOL;
 
 			/** Send **/
-			header('Content-Type: text/event-stream');
-			header('Cache-Control: no-cache');
+			//header('Content-Type: text/event-stream');
+			//header('Cache-Control: no-cache');
 			print $strPackage.PHP_EOL;
 			flush();
 

@@ -45,7 +45,7 @@
     	$denied 	= ($config[$group][$class][$method] == false);
     } else {
     	$denied 	= false;
-    	$view 		= self;
+    	$view 		= 'self';
     }
 
     $restrictions	= array(

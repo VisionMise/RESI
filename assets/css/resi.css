@@ -11,6 +11,85 @@ body {
 	background-attachment: fixed;
 }
 
+/** TILES **/
+.tile-lg,
+.tile-md,
+.tile-sm {
+	border:1px solid rgba(200,200,200,0.5);
+	padding:5px;
+	width:100%;
+	margin:3px;
+
+	box-shadow:rgba(0,0,0,0.5) 0px 5px 8px -3px;
+
+	transition: margin 0.150s, box-shadow 0.150s;
+	-webkit-transition: margin 0.150s, box-shadow 0.150s;
+	-moz-transition: margin 0.150s, box-shadow 0.150s;
+	-o-transition: margin 0.150s, box-shadow 0.150s;
+}
+.tile-lg:hover,
+.tile-md:hover,
+.tile-sm:hover {
+	margin-bottom:1px;
+	margin-top:5px;
+	cursor:pointer;
+
+	box-shadow:rgba(0,0,0,0.5) 0px 5px 8px -5px;
+
+	transition: margin 0.250s, box-shadow 0.150s;
+	-webkit-transition: margin 0.150s, box-shadow 0.150s;
+	-moz-transition: margin 0.150s, box-shadow 0.150s;
+	-o-transition: margin 0.150s, box-shadow 0.150s;
+}
+
+.tile-body {
+	letter-spacing: 1px;
+	font-size:16px;
+	line-height:18px;
+}
+
+.tile-lg .tile-body {
+	letter-spacing: 2px;
+	font-size:18px;
+	line-height:20px;
+}
+
+.tile-md .tile-body {
+	letter-spacing: 2px;
+	font-size:14px;
+	line-height:16px;
+}
+
+.tile-sm .tile-body {
+	letter-spacing: 1px;
+	font-size:12px;
+	line-height:14px;
+}
+
+.tile-lg {
+	min-height:134px;
+	height:200px;
+	max-height:200px;
+}
+
+.tile-md {
+	min-height:64px;
+	height:134px;
+	max-height:134px;
+}
+
+.tile-sm {
+	min-height:64px;
+	height:64px;
+	max-height:134px;
+}
+
+.round {
+	border-radius: 400px;
+	width: 200px;
+	height:200px;
+}
+
 
 /** TEXT **/
 .c {text-align: center;}
@@ -24,12 +103,66 @@ body {
 	letter-spacing: 4px;
 }
 
+.sparse-8 {
+	letter-spacing: 8px;
+}
+
 
 /** COLOR **/
 .black {
-	background-color:#000000;
+	background-color:rgba(0,0,0,0.9);
+	border-color:rgba(0,0,0,0.45);
 	color:#fafafa;
 }
+
+.red {
+	background-color:rgba(200,0,0,0.7);
+	border-color:rgba(180,0,0,0.45);
+	color:#fafafa;
+}
+
+.blue {
+	background-color:rgba(0,0,200,0.7);
+	border-color:rgba(0,0,180,0.45);
+	color:#fafafa;
+}
+
+.green {
+	background-color:rgba(0,200,0,0.7);
+	border-color:rgba(0,180,0,0.45);
+	color:#fafafa;
+}
+
+.yellow {
+	background-color:rgba(200,200,0,0.7);
+	border-color:rgba(180,180,0,0.45);
+	color:#202020;
+}
+
+.orange {
+	background-color:rgba(200,100,0,0.7);
+	border-color:rgba(180,180,0,0.45);
+	color:#202020;
+}
+
+.gray-20 {
+	background-color:rgba(0,0,0,0.2);
+	border-color:rgba(0,0,0,0.10);
+	color:#fafafa;
+}
+
+.gray-40 {
+	background-color:rgba(0,0,0,0.4);
+	border-color:rgba(0,0,0,0.30);
+	color:#fafafa;
+}
+
+.gray-60 {
+	background-color:rgba(0,0,0,0.6);
+	border-color:rgba(0,0,0,0.40);
+	color:#fafafa;
+}
+
 
 
 /** BOX **/
@@ -71,106 +204,8 @@ body {
 	height:428px;
 }
 
-
 .underlined {
 	border-bottom:solid 1px #808080;
 }
 
 
-/** TILES **/
-.tile {
-	border:rgba(20,40,60,0.35) solid 1px;
-	border-radius:3px;
-
-	background-color: rgba(20,30,40,0.65);
-	color: #a5a5a5;
-	box-shadow: rgba(0,0,0,0.5) -1px 6px 7px -2px;
-
-	height:128px;
-	width:128px;
-
-	margin:2px;
-	padding:5px;
-
-	transition: color 0.2s, margin-bottom 0.2s, margin-top 0.2s, box-shadow 0.2s;
-	-webkit-transition: color 0.2s, margin-bottom 0.2s, margin-top 0.2s, box-shadow 0.2s;
-	-moz-transition: color 0.2s, margin-bottom 0.2s, margin-top 0.2s, box-shadow 0.2s;
-	-o-transition: color 0.2s, margin-bottom 0.2s, margin-top 0.21s, box-shadow 0.2s;
-}
-
-.tile:hover {
-	box-shadow: rgba(0,0,0,0.5) -1px 6px 7px -4px;
-	color: rgba(100,100,140,0.5);
-	margin-bottom:0px;
-	margin-top:4px;
-
-	cursor:pointer;
-
-	transition: color 0.2s, margin-bottom 0.2s, margin-top 0.2s, box-shadow 0.2s;
-	-webkit-transition: color 0.2s, margin-bottom 0.2s, margin-top 0.2s, box-shadow 0.2s;
-	-moz-transition: color 0.2s, margin-bottom 0.2s, margin-top 0.2s, box-shadow 0.2s;
-	-o-transition: color 0.2s, margin-bottom 0.2s, margin-top 0.2s, box-shadow 0.2s;
-}
-
-.box h2 span.glyphicon {
-	font-size:24px;
-}
-
-.tile span.glyphicon {
-	font-size:72px;
-}
-
-.tile.tile-sm span.glyphicon {
-	font-size:24px;
-}
-
-.tile.tile-md span.glyphicon {
-	font-size:36px;
-}
-
-.tile.tile-lg span.glyphicon {
-	font-size:144px;
-}
-
-.tile div.tile-body {
-	letter-spacing: 1px;
-	font-size:18px;
-	line-height:48px;
-}
-
-.tile.tile-lg div.tile-body {
-	letter-spacing: 2px;
-	font-size:36px;
-	line-height:96px;
-}
-
-.tile.tile-md div.tile-body {
-	letter-spacing: 2px;
-	font-size:24px;
-	line-height:72px;
-}
-
-.tile.tile-sm div.tile-body {
-	letter-spacing: 2px;
-	font-size:18px;
-	line-height:64px;
-}
-
-.tile-lg {
-	height:268px;
-	width:256px;
-}
-
-.tile-md {
-	height:184px;
-	width:148px;
-}
-
-.tile-sm {
-	height:64px;
-	width:64px;
-}
-
-.round {
-	border-radius: 400px;
-}
